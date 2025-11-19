@@ -12,7 +12,7 @@ pipeline {
         stage('Instalar dependencias Backend') {
             steps {
                 dir('backend') {
-                    sh 'npm install'
+                    bat 'npm install'
                 }
             }
         }
@@ -20,7 +20,7 @@ pipeline {
         stage('Instalar dependencias Frontend') {
             steps {
                 dir('frontend') {
-                    sh 'npm install'
+                    bat 'npm install'
                 }
             }
         }
@@ -28,8 +28,8 @@ pipeline {
         stage('Probar Backend (10 segundos)') {
             steps {
                 dir('backend') {
-                    echo 'Iniciando backend por 10 segundos para demostración...'
-                    sh 'node src/server.js & sleep 10'
+                    echo 'Iniciando backend por 10 segundos...'
+                    bat 'start "" cmd /c "node src/server.js & timeout /t 10"'
                 }
             }
         }
@@ -37,8 +37,9 @@ pipeline {
         stage('Probar Frontend (10 segundos)') {
             steps {
                 dir('frontend') {
-                    echo 'Iniciando frontend por 10 segundos para demostración...'
-                    sh 'npm run dev & sleep 10'
+                    echo 'Iniciando frontend por 10 segundos...'
+                    // npm run dev se queda colgado en Windows, así que lo abrimos en un cmd separado
+                    bat 'start "" cmd /c "npm run dev & timeout /t 10"'
                 }
             }
         }
