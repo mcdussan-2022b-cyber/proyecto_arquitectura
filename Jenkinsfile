@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     stages {
-
         stage('Checkout del repositorio') {
             steps {
                 echo 'Clonando el repositorio desde GitHub...'
@@ -12,48 +11,36 @@ pipeline {
 
         stage('Instalar dependencias Backend') {
             steps {
-                echo 'Instalando dependencias del backend...'
                 dir('backend') {
-                    bat 'npm install'
+                    sh 'npm install'
                 }
             }
         }
 
         stage('Instalar dependencias Frontend') {
             steps {
-                echo 'Instalando dependencias del frontend...'
                 dir('frontend') {
-                    bat 'npm install'
+                    sh 'npm install'
                 }
             }
         }
 
-        stage('Iniciar Backend') {
+        stage('Probar Backend (10 segundos)') {
             steps {
-                echo 'Iniciando back-end en Node.js...'
                 dir('backend') {
-                    // IMPORTANTE: doble backslash por Windows
-                    bat 'node .\\src\\server.js'
+                    echo 'Iniciando backend por 10 segundos para demostración...'
+                    sh 'node src/server.js & sleep 10'
                 }
             }
         }
 
-        stage('Iniciar Frontend') {
+        stage('Probar Frontend (10 segundos)') {
             steps {
-                echo 'Iniciando front-end en modo desarrollo...'
                 dir('frontend') {
-                    bat 'npm run dev'
+                    echo 'Iniciando frontend por 10 segundos para demostración...'
+                    sh 'npm run dev & sleep 10'
                 }
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'Pipeline ejecutado correctamente ✔'
-        }
-        failure {
-            echo 'El pipeline ha fallado ✖'
         }
     }
 }
